@@ -1,0 +1,2 @@
+# techniki_inwentaryzacji_przestrzeni_001
+ techniki inwentaryzacji

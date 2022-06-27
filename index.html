@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Analiza ergonomii obiektów usługowych, względem osób z niepełnosprawnościami fizycznymi, w biskim otoczeniu parku w Konstancinie-Jeziornie</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/bufor150m_1.js"></script>
+        <script src="data/parkzdrojowy_2.js"></script>
+        <script src="data/przestrzenieprzyusugach_3.js"></script>
+        <script src="data/budynkiinne_4.js"></script>
+        <script src="data/budynki_usugowe_5.js"></script>
+        <script src="data/cigipiesze_6.js"></script>
+        <script src="data/punktyusugowe_7.js"></script>
+        <script>
+        var m2px = 1;
+        function newM2px() {
+            var centerLatLng = map.getCenter();
+            var pointC = map.latLngToContainerPoint(centerLatLng);
+            var pointX = [pointC.x + 100, pointC.y];
+
+            var latLngC = map.containerPointToLatLng(pointC);
+            var latLngX = map.containerPointToLatLng(pointX);
+
+            var distanceX = latLngC.distanceTo(latLngX)/100;
+
+            reciprocal = 1 / distanceX;
+            m2px = reciprocal;
+        }
+        function geoStyle(m) {
+            return Math.ceil(m * m2px);
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[52.082088060672284,21.106319467638233],[52.089190248181254,21.122476235870813]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_OSMStandard_0');
+        map.getPane('pane_OSMStandard_0').style.zIndex = 400;
+        var layer_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OSMStandard_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_0;
+        map.addLayer(layer_OSMStandard_0);
+        function pop_bufor150m_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_bufor150m_1_0() {
+            return {
+                pane: 'pane_bufor150m_1',
+                opacity: 1,
+                color: 'rgba(172,1,7,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_bufor150m_1');
+        map.getPane('pane_bufor150m_1').style.zIndex = 401;
+        map.getPane('pane_bufor150m_1').style['mix-blend-mode'] = 'normal';
+        var layer_bufor150m_1 = new L.geoJson(json_bufor150m_1, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_bufor150m_1',
+            layerName: 'layer_bufor150m_1',
+            pane: 'pane_bufor150m_1',
+            onEachFeature: pop_bufor150m_1,
+            style: style_bufor150m_1_0,
+        });
+        bounds_group.addLayer(layer_bufor150m_1);
+        map.addLayer(layer_bufor150m_1);
+        function pop_parkzdrojowy_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_parkzdrojowy_2_0() {
+            return {
+                pane: 'pane_parkzdrojowy_2',
+                opacity: 1,
+                color: 'rgba(97,97,97,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(178,223,138,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_parkzdrojowy_2');
+        map.getPane('pane_parkzdrojowy_2').style.zIndex = 402;
+        map.getPane('pane_parkzdrojowy_2').style['mix-blend-mode'] = 'normal';
+        var layer_parkzdrojowy_2 = new L.geoJson(json_parkzdrojowy_2, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_parkzdrojowy_2',
+            layerName: 'layer_parkzdrojowy_2',
+            pane: 'pane_parkzdrojowy_2',
+            onEachFeature: pop_parkzdrojowy_2,
+            style: style_parkzdrojowy_2_0,
+        });
+        bounds_group.addLayer(layer_parkzdrojowy_2);
+        map.addLayer(layer_parkzdrojowy_2);
+        function pop_przestrzenieprzyusugach_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_przestrzenieprzyusugach_3_0() {
+            return {
+                pane: 'pane_przestrzenieprzyusugach_3',
+                opacity: 1,
+                color: 'rgba(86,86,86,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(174,84,0,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_przestrzenieprzyusugach_3');
+        map.getPane('pane_przestrzenieprzyusugach_3').style.zIndex = 403;
+        map.getPane('pane_przestrzenieprzyusugach_3').style['mix-blend-mode'] = 'normal';
+        var layer_przestrzenieprzyusugach_3 = new L.geoJson(json_przestrzenieprzyusugach_3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_przestrzenieprzyusugach_3',
+            layerName: 'layer_przestrzenieprzyusugach_3',
+            pane: 'pane_przestrzenieprzyusugach_3',
+            onEachFeature: pop_przestrzenieprzyusugach_3,
+            style: style_przestrzenieprzyusugach_3_0,
+        });
+        bounds_group.addLayer(layer_przestrzenieprzyusugach_3);
+        map.addLayer(layer_przestrzenieprzyusugach_3);
+        function pop_budynkiinne_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_budynkiinne_4_0() {
+            return {
+                pane: 'pane_budynkiinne_4',
+                opacity: 1,
+                color: 'rgba(86,86,86,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(169,169,169,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_budynkiinne_4');
+        map.getPane('pane_budynkiinne_4').style.zIndex = 404;
+        map.getPane('pane_budynkiinne_4').style['mix-blend-mode'] = 'normal';
+        var layer_budynkiinne_4 = new L.geoJson(json_budynkiinne_4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_budynkiinne_4',
+            layerName: 'layer_budynkiinne_4',
+            pane: 'pane_budynkiinne_4',
+            onEachFeature: pop_budynkiinne_4,
+            style: style_budynkiinne_4_0,
+        });
+        bounds_group.addLayer(layer_budynkiinne_4);
+        map.addLayer(layer_budynkiinne_4);
+        function pop_budynki_usugowe_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_budynki_usugowe_5_0() {
+            return {
+                pane: 'pane_budynki_usugowe_5',
+                opacity: 1,
+                color: 'rgba(86,86,86,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(169,169,169,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_budynki_usugowe_5');
+        map.getPane('pane_budynki_usugowe_5').style.zIndex = 405;
+        map.getPane('pane_budynki_usugowe_5').style['mix-blend-mode'] = 'normal';
+        var layer_budynki_usugowe_5 = new L.geoJson(json_budynki_usugowe_5, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_budynki_usugowe_5',
+            layerName: 'layer_budynki_usugowe_5',
+            pane: 'pane_budynki_usugowe_5',
+            onEachFeature: pop_budynki_usugowe_5,
+            style: style_budynki_usugowe_5_0,
+        });
+        bounds_group.addLayer(layer_budynki_usugowe_5);
+        map.addLayer(layer_budynki_usugowe_5);
+        function pop_cigipiesze_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jaki jest rodzaj ciągu pieszego?</th>\
+                        <td>' + (feature.properties['typ_obiekt'] !== null ? autolinker.link(feature.properties['typ_obiekt'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jaki jest rodzaj nawierzchni?</th>\
+                        <td>' + (feature.properties['rodzaj_naw'] !== null ? autolinker.link(feature.properties['rodzaj_naw'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jaki jest stan nawierzchni?</th>\
+                        <td>' + (feature.properties['stan_nawie'] !== null ? autolinker.link(feature.properties['stan_nawie'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Przyznane punkty:</th>\
+                        <td>' + (feature.properties['punkty'] !== null ? autolinker.link(feature.properties['punkty'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_cigipiesze_6_0(feature) {
+            switch(String(feature.properties['stan_nawie'])) {
+                case '1/6':
+                    return {
+                pane: 'pane_cigipiesze_6',
+                opacity: 1,
+                color: 'rgba(215,25,28,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: geoStyle(3.0),
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case '2/6':
+                    return {
+                pane: 'pane_cigipiesze_6',
+                opacity: 1,
+                color: 'rgba(243,134,78,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: geoStyle(3.0),
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case '3/6':
+                    return {
+                pane: 'pane_cigipiesze_6',
+                opacity: 1,
+                color: 'rgba(210,195,101,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: geoStyle(3.0),
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case '4/6':
+                    return {
+                pane: 'pane_cigipiesze_6',
+                opacity: 1,
+                color: 'rgba(136,203,97,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: geoStyle(3.0),
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case '5/6':
+                    return {
+                pane: 'pane_cigipiesze_6',
+                opacity: 1,
+                color: 'rgba(64,146,92,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: geoStyle(3.0),
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case '6/6':
+                    return {
+                pane: 'pane_cigipiesze_6',
+                opacity: 1,
+                color: 'rgba(26,34,150,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: geoStyle(3.0),
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_cigipiesze_6');
+        map.getPane('pane_cigipiesze_6').style.zIndex = 406;
+        map.getPane('pane_cigipiesze_6').style['mix-blend-mode'] = 'normal';
+        var layer_cigipiesze_6 = new L.geoJson(json_cigipiesze_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_cigipiesze_6',
+            layerName: 'layer_cigipiesze_6',
+            pane: 'pane_cigipiesze_6',
+            onEachFeature: pop_cigipiesze_6,
+            style: style_cigipiesze_6_0,
+        });
+        bounds_group.addLayer(layer_cigipiesze_6);
+        map.addLayer(layer_cigipiesze_6);
+        function pop_punktyusugowe_7(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jaki posiada on główny typ nawierzchni?</th>\
+                        <td>' + (feature.properties['rodzaj_nawierzchni'] !== null ? autolinker.link(feature.properties['rodzaj_nawierzchni'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jaki jest to typ obiektu?</th>\
+                        <td>' + (feature.properties['typ_obiektu'] !== null ? autolinker.link(feature.properties['typ_obiektu'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jaki jest rodzaj zabudowy danej usługi?</th>\
+                        <td>' + (feature.properties['rodzaj_zabudowy'] !== null ? autolinker.link(feature.properties['rodzaj_zabudowy'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">data:</th>\
+                        <td>' + (feature.properties['data'] !== null ? autolinker.link(feature.properties['data'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jaki jest typ wiodoącej usługi?</th>\
+                        <td>' + (feature.properties['rodzaj_obiektu'] !== null ? autolinker.link(feature.properties['rodzaj_obiektu'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Czy wystepuje toaleta dla osób z niepełnosprawnościami?</th>\
+                        <td>' + (feature.properties['toalety_dla_osób_z_niepełnosprawnościami'] !== null ? autolinker.link(feature.properties['toalety_dla_osób_z_niepełnosprawnościami'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Czy obiekt posiada windę?</th>\
+                        <td>' + (feature.properties['winda'] !== null ? autolinker.link(feature.properties['winda'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Czy występuje podjazd dla osób z niepełnospawnościami?</th>\
+                        <td>' + (feature.properties['rampa'] !== null ? autolinker.link(feature.properties['rampa'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Wynik punktowy:</th>\
+                        <td>' + (feature.properties['punkty'] !== null ? autolinker.link(feature.properties['punkty'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Jaki jest stan nawierzchni?</th>\
+                        <td>' + (feature.properties['Jaki jest stan nawierzchni?'] !== null ? autolinker.link(feature.properties['Jaki jest stan nawierzchni?'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">zdjecie:</th>\
+                        <td>' + (feature.properties['zdjecie:'] !== null ? autolinker.link(feature.properties['zdjecie:'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_punktyusugowe_7_0(feature) {
+            if (feature.properties['punkty'] >= 5.500000 && feature.properties['punkty'] <= 8.500000 ) {
+                return {
+                pane: 'pane_punktyusugowe_7',
+                radius: 14.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,25,28,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['punkty'] >= 8.500000 && feature.properties['punkty'] <= 9.500000 ) {
+                return {
+                pane: 'pane_punktyusugowe_7',
+                radius: 14.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(253,174,97,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['punkty'] >= 9.500000 && feature.properties['punkty'] <= 9.800000 ) {
+                return {
+                pane: 'pane_punktyusugowe_7',
+                radius: 14.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,192,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['punkty'] >= 9.800000 && feature.properties['punkty'] <= 12.400000 ) {
+                return {
+                pane: 'pane_punktyusugowe_7',
+                radius: 14.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(166,217,106,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['punkty'] >= 12.400000 && feature.properties['punkty'] <= 14.000000 ) {
+                return {
+                pane: 'pane_punktyusugowe_7',
+                radius: 14.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(26,150,65,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_punktyusugowe_7');
+        map.getPane('pane_punktyusugowe_7').style.zIndex = 407;
+        map.getPane('pane_punktyusugowe_7').style['mix-blend-mode'] = 'normal';
+        var layer_punktyusugowe_7 = new L.geoJson(json_punktyusugowe_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_punktyusugowe_7',
+            layerName: 'layer_punktyusugowe_7',
+            pane: 'pane_punktyusugowe_7',
+            onEachFeature: pop_punktyusugowe_7,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_punktyusugowe_7_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_punktyusugowe_7);
+        map.addLayer(layer_punktyusugowe_7);
+            var title = new L.Control();
+            title.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            title.update = function () {
+                this._div.innerHTML = '<h2>Analiza ergonomii obiektów usługowych, względem osób z niepełnosprawnościami fizycznymi, w biskim otoczeniu parku w Konstancinie-Jeziornie</h2>';
+            };
+            title.addTo(map);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'punkty usługowe<br /><table><tr><td style="text-align: center;"><img src="legend/punktyusugowe_7_55850.png" /></td><td>5,5 - 8,5</td></tr><tr><td style="text-align: center;"><img src="legend/punktyusugowe_7_86951.png" /></td><td>8,6 - 9,5</td></tr><tr><td style="text-align: center;"><img src="legend/punktyusugowe_7_96982.png" /></td><td>9,6 - 9,8</td></tr><tr><td style="text-align: center;"><img src="legend/punktyusugowe_7_991243.png" /></td><td>9,9 - 12,4</td></tr><tr><td style="text-align: center;"><img src="legend/punktyusugowe_7_125144.png" /></td><td>12,5 - 14</td></tr></table>': layer_punktyusugowe_7,'ciągi piesze<br /><table><tr><td style="text-align: center;"><img src="legend/cigipiesze_6_160.png" /></td><td>1/6</td></tr><tr><td style="text-align: center;"><img src="legend/cigipiesze_6_261.png" /></td><td>2/6</td></tr><tr><td style="text-align: center;"><img src="legend/cigipiesze_6_362.png" /></td><td>3/6</td></tr><tr><td style="text-align: center;"><img src="legend/cigipiesze_6_463.png" /></td><td>4/6</td></tr><tr><td style="text-align: center;"><img src="legend/cigipiesze_6_564.png" /></td><td>5/6</td></tr><tr><td style="text-align: center;"><img src="legend/cigipiesze_6_665.png" /></td><td>6/6</td></tr></table>': layer_cigipiesze_6,'<img src="legend/budynki_usugowe_5.png" /> budynki_usługowe': layer_budynki_usugowe_5,'<img src="legend/budynkiinne_4.png" /> budynki inne': layer_budynkiinne_4,'<img src="legend/przestrzenieprzyusugach_3.png" /> przestrzenie przy usługach': layer_przestrzenieprzyusugach_3,'<img src="legend/parkzdrojowy_2.png" /> park zdrojowy': layer_parkzdrojowy_2,'<img src="legend/bufor150m_1.png" /> bufor 150m': layer_bufor150m_1,"OSM Standard": layer_OSMStandard_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        newM2px();
+
+            layer_cigipiesze_6.setStyle(style_cigipiesze_6_0);
+        map.on("zoomend", function(){
+            newM2px();
+
+            layer_cigipiesze_6.setStyle(style_cigipiesze_6_0);
+        });
+        </script>
+    </body>
+</html>
